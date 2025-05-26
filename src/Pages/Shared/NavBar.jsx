@@ -1,11 +1,24 @@
-import React from "react";
+import React, { use } from "react";
 import { NavLink } from "react-router";
+import { AuthContext } from "../../Context/AuthContext/AuthContext";
 
 const NavBar = () => {
+  const { user,handleLogOut } = use(AuthContext);
+
+
+  const LogOut = () => {
+    handleLogOut()
+    .then(()=> {
+        console.log("Log Out Successfully");
+    }).catch(error => {
+        console.log(error);
+    })
+  }
+
   const links = (
     <>
       <li>
-        <NavLink to='/'>Home</NavLink>
+        <NavLink to="/">Home</NavLink>
       </li>
     </>
   );
@@ -40,13 +53,17 @@ const NavBar = () => {
         <a className="btn btn-ghost text-xl">daisyUI</a>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-         {links}
-        </ul>
+        <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
       <div className="navbar-end gap-5">
-        <NavLink to='/register'>Register</NavLink>
-        <NavLink to='/login'>Login</NavLink>
+        {user ? (
+          <button onClick={LogOut}>Log Out</button>
+        ) : (
+          <>
+            <NavLink to="/register">Register</NavLink>
+            <NavLink to="/login">Login</NavLink>
+          </>
+        )}
       </div>
     </div>
   );
