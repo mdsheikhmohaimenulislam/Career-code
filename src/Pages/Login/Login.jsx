@@ -1,38 +1,39 @@
-import React, { use } from 'react';
-import LoginLottie from '../../assets/Login.json'
-import Lottie from 'lottie-react';
-import { AuthContext } from '../../Context/AuthContext/AuthContext';
-import SocialLogin from '../Shared/SocialLogin';
+import React, { use } from "react";
+import LoginLottie from "../../assets/Login.json";
+import Lottie from "lottie-react";
+import { AuthContext } from "../../Context/AuthContext/AuthContext";
+import SocialLogin from "../Shared/SocialLogin";
+import { useLocation, useNavigate } from "react-router";
 
 const Login = () => {
+  const { handleLoginUser } = use(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state || "/";
 
-    const {handleLoginUser} = use(AuthContext)
+  const handleLoginForm = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    console.log(email, password);
 
+    // Login user
+    handleLoginUser(email, password)
+      .then((result) => {
+        console.log(result);
+        navigate(from);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-
-    const handleLoginForm = e => {
-        e.preventDefault()
-        const form = e.target
-        const email = form.email.value
-        const password = form.password.value
-        console.log(email,password);
-
-
-        // Login user 
-        handleLoginUser(email,password)
-        .then(result => {
-            console.log(result);
-        }).catch(error => {
-            console.log(error);
-        })
-    }
-
-
-    return (
+  return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content  flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left">
-            <Lottie className="w-110" animationData={LoginLottie} />
+          <Lottie className="w-110" animationData={LoginLottie} />
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
           <div className="card-body">
@@ -59,14 +60,12 @@ const Login = () => {
                 Login
               </button>
             </form>
-                <SocialLogin/>
+            <SocialLogin from={from} />
           </div>
         </div>
       </div>
-
-  
     </div>
-    );
+  );
 };
 
 export default Login;

@@ -20,6 +20,13 @@ const NavBar = () => {
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
+
+      {
+        user && 
+        <>
+             <NavLink to="/myApplications">Application</NavLink>
+        </>
+      }
     </>
   );
   return (
