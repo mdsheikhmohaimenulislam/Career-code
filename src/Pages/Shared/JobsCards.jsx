@@ -16,6 +16,11 @@ const JobsCards = ({ job }) => {
     company_logo,
   } = job || {};
 
+const newSalaryRange = {
+  min: parseInt(salaryRange?.min),
+  max: parseInt(salaryRange?.max),
+};
+
   return (
     <div className="card bg-base-100  shadow-sm">
       <div className="flex">
@@ -36,7 +41,7 @@ const JobsCards = ({ job }) => {
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
         <p>
-          Salary: {salaryRange.min} - {salaryRange.max}
+          Salary: {newSalaryRange.min} - {newSalaryRange.max}
         </p>
         <p>{description}</p>
         <div className="grid grid-cols-2 gap-5">
