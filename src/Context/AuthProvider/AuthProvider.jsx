@@ -9,8 +9,9 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
+import axios from "axios";
 
-const googleProvider = new GoogleAuthProvider()
+const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -27,9 +28,9 @@ const AuthProvider = ({ children }) => {
   };
 
   const handleGoogle = () => {
-    setLoading(true)
-    return signInWithPopup(auth,googleProvider)
-  }
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
 
   const handleLogOut = () => {
     setLoading(true);
@@ -40,6 +41,21 @@ const AuthProvider = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+
+      // jwt related
+      if (currentUser?.email) {
+        const userData = { email: currentUser.email };
+        axios
+          .post("http://localhost:3000/jwt", userData, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     });
     return () => {
       unSubscribe();
@@ -52,7 +68,7 @@ const AuthProvider = ({ children }) => {
     handleRegister,
     handleLoginUser,
     handleLogOut,
-    handleGoogle
+    handleGoogle,
   };
 
   return <AuthContext value={authInfo}>{children}</AuthContext>;
